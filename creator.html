@@ -8,7 +8,7 @@
 
 <script>
 const params = new URLSearchParams(location.search);
-const creator = (params.get('p') || '').replace(/[^a-zA-Z0-9_\-]/g,'');
+const creator = (params.get('p') || '').replace(/[^a-zA-Z0-9-_]/g,'');
 const title = document.getElementById('title');
 const list = document.getElementById('list');
 const player = document.getElementById('player');
