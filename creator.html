@@ -1,6 +1,28 @@
 <!doctype html>
 <html>
-<head><meta charset="utf-8"><title>Creator</title></head>
+<head><meta charset="utf-8"><title>Creator</title>
+<style>
+  button {
+    padding: 10px 15px;
+    border: 2px solid #333;
+    border-radius: 4px;
+    background-color: #f5f5f5;
+    color: #333;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+  }
+  button:hover {
+    background-color: #333;
+    color: #f5f5f5;
+  }
+  #player {
+    border: 2px solid #333;
+    border-radius: 4px;
+    padding: 10px;
+  }
+</style>
+</head>
 <body>
 <h1 id="title"></h1>
 <div id="list"></div>
@@ -38,32 +60,32 @@ if (!creator) {
         return;
       }
 
-      const buttons = files.map(name => {
-        const btn = document.createElement('button');
-        btn.textContent = name;
-        btn.style.display = 'block';
-        btn.style.margin = '6px 0';
-        btn.addEventListener('click', () => {
-          const url = 'Creators/' + encodeURIComponent(actualCreator) + '/' + encodeURIComponent(name);
-          player.src = url;
-          player.play().catch(() => {});
-          history.replaceState(null, '', '?p=' + encodeURIComponent(actualCreator) + '&t=' + encodeURIComponent(name));
+        const buttons = files.map(name => {
+         const btn = document.createElement('button');
+          btn.textContent = name;
+          btn.style.display = 'block';
+          btn.style.margin = '6px 0';
+          btn.addEventListener('click', () => {
+            const url = 'Creators/' + encodeURIComponent(actualCreator) + '/' + encodeURIComponent(name);
+            player.src = url;
+            player.play().catch(() => {});
+            history.replaceState(null, '', '?p=' + encodeURIComponent(actualCreator) + '&t=' + encodeURIComponent(name));
+          });
+          list.appendChild(btn);
+          return btn;
         });
-        list.appendChild(btn);
-        return btn;
-      });
 
-      const t = params.get('t');
-      if (t) {
-        const index = files.indexOf(t);
-        if (index !== -1) {
-          buttons[index].click();
+        const t = params.get('t');
+        if (t) {
+          const index = files.indexOf(t);
+          if (index !== -1) {
+            buttons[index].click();
+          }
         }
-      }
-    })
-    .catch(() => {
-      list.textContent = 'Could not load creators.json';
-    });
+      })
+      .catch(() => {
+        list.textContent = 'Could not load creators.json';
+      });
 }
 </script>
 </body>
