@@ -24,7 +24,7 @@ fetch('creators.json').then(r=>r.json()).then(data=>{
     btn.style.display = 'block';
     btn.style.margin = '6px 0';
     btn.onclick = ()=> {
-      const url = '' + encodeURIComponent(creator) + '/' + encodeURIComponent(name);
+      const url = 'Creators/' + encodeURIComponent(creator) + '/' + encodeURIComponent(name);
       const player = document.getElementById('player');
       player.src = url;
       player.play().catch(()=>{});
