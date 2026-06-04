@@ -4,12 +4,30 @@
 <body>
 <h1>Creators</h1>
 <ul id="list">
-  <!-- Edit this list to match folders in /creators/ -->
-  <li><a href="creator.html?p=Micha">micha</a></li>
-  <li><a href="creator.html?p=Joel">joel</a></li>
-  <li><a href="creator.html?p=Jacko">jacko</a></li>
+  <li>Loading creators…</li>
 </ul>
 <hr>
+<script>
+fetch('creators.json')
+  .then(r => r.json())
+  .then(data => {
+    const list = document.getElementById('list');
+    list.innerHTML = '';
+    Object.keys(data)
+      .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
+      .forEach(name => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = 'creator.html?p=' + encodeURIComponent(name);
+        a.textContent = name;
+        li.appendChild(a);
+        list.appendChild(li);
+      });
+  })
+  .catch(() => {
+    document.getElementById('list').textContent = 'Could not load creators.json';
+  });
+</script>
 </body>
 <footer>
     <small><pre>
