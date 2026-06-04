@@ -23,7 +23,16 @@ if (!creator) {
   fetch('creators.json')
     .then(r => r.json())
     .then(data => {
-      const files = Array.isArray(data[creator]) ? data[creator] : [];
+      const creatorKey = Object.keys(data).find(k => k.toLowerCase() === creator.toLowerCase())
+        || Object.keys(data).find(k => k.toLowerCase().endsWith(creator.toLowerCase()))
+        || Object.keys(data).find(k => creator.toLowerCase().endsWith(k.toLowerCase()));
+      const actualCreator = creatorKey || creator;
+      if (creatorKey && creatorKey !== creator) {
+        title.textContent = creatorKey;
+        history.replaceState(null, '', '?p=' + encodeURIComponent(creatorKey));
+      }
+
+      const files = Array.isArray(data[actualCreator]) ? data[actualCreator] : [];
       if (!files.length) {
         list.textContent = 'No audio files found.';
         return;
@@ -35,10 +44,10 @@ if (!creator) {
         btn.style.display = 'block';
         btn.style.margin = '6px 0';
         btn.addEventListener('click', () => {
-          const url = 'Creators/' + encodeURIComponent(creator) + '/' + encodeURIComponent(name);
+          const url = 'Creators/' + encodeURIComponent(actualCreator) + '/' + encodeURIComponent(name);
           player.src = url;
           player.play().catch(() => {});
-          history.replaceState(null, '', '?p=' + encodeURIComponent(creator) + '&t=' + encodeURIComponent(name));
+          history.replaceState(null, '', '?p=' + encodeURIComponent(actualCreator) + '&t=' + encodeURIComponent(name));
         });
         list.appendChild(btn);
         return btn;
