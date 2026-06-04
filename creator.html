@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Creator</title></head>
+<body>
+<h1 id="title"></h1>
+<div id="list"></div>
+<audio id="player" controls style="display:block;margin-top:12px;"></audio>
+
+<script>
+const params = new URLSearchParams(location.search);
+const creator = (params.get('p') || '').replace(/[^a-zA-Z0-9_\-]/g,'');
+if (!creator) { document.getElementById('list').textContent = 'No creator specified.'; throw 0; }
+document.getElementById('title').textContent = creator;
+
+// creators.json must be kept up-to-date in the repo. Format: { "micha": ["a.mp3","b.mp3"], ... }
+fetch('creators.json').then(r=>r.json()).then(data=>{
+  const files = data[creator] || [];
+  const list = document.getElementById('list');
+  if (!files.length) { list.textContent = 'No audio files found.'; return; }
+  files.forEach(f=>{
+    const name = f;
+    const btn = document.createElement('button');
+    btn.textContent = name;
+    btn.style.display = 'block';
+    btn.style.margin = '6px 0';
+    btn.onclick = ()=> {
+      const url = '' + encodeURIComponent(creator) + '/' + encodeURIComponent(name);
+      const player = document.getElementById('player');
+      player.src = url;
+      player.play().catch(()=>{});
+      history.replaceState(null,'','?p='+encodeURIComponent(creator)+'&t='+encodeURIComponent(name));
+    };
+    list.appendChild(btn);
+  });
+
+  // optionally select ?t=filename
+  const t = params.get('t');
+  if (t) {
+    const match = files.find(x => x === t);
+    if (match) {
+      document.querySelector('button[onclick]').click?.();
+    }
+  }
+}).catch(()=>document.getElementById('list').textContent='Could not load creators.json');
+</script>
+</body>
+</html>
